@@ -1,0 +1,25 @@
+GetNextBusIntent get next {bus} at {stop}
+GetNextBusIntent get {bus} at {stop}
+GetNextBusIntent get next {bus} bus at stop {stop}
+GetNextBusIntent get next scheduled {bus} bus at stop {stop}
+GetNextBusIntent next arrival for {bus} bus at stop {stop}
+GetNextBusIntent get next scheduled {bus} bus at stop {stop}
+GetNextBusIntent bus {bus} at {stop}
+
+HelpIntent help
+HelpIntent help me
+HelpIntent what can I ask you
+HelpIntent get help
+HelpIntent to help
+HelpIntent to help me
+HelpIntent what commands can I ask
+HelpIntent what commands can I say
+HelpIntent what can I do
+HelpIntent what can I use this for
+HelpIntent what questions can I ask
+HelpIntent what can you do
+HelpIntent what do you do
+HelpIntent how do I use you
+HelpIntent how can I use you
+HelpIntent what can you tell me
+HelpIntent how do i find a bus
