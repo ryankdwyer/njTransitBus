@@ -41,16 +41,17 @@ const numToWord = {
 
 const handlers = {
     'LaunchRequest': function () {
-        this.emit('GetNewFactIntent');
+        this.emit('GetNextBusIntent');
     },
-    'GetNextBusIntent': function (intent, session, response) {
-        let bus = intent.slots.bus.value;
-        let stop = intent.slots.stop.value;
+    'GetNextBusIntent': function () {
+        let bus = this.event.request.intent.slots.bus.value;
+        let stop = this.event.request.intent.slots.stop.value;
         let text = '';
 
         if (!bus || !route) {
             text = 'You must supply both a bus and stop number';
-            this.response.tellWithCard(text, PROBLEM_MESSAGE, text);
+            this.response.speak(PROBLEM_MESSAGE);
+            this.emit(':responseReady');
             return;
         }
 
@@ -59,21 +60,25 @@ const handlers = {
             .then(createText)
             .then(speak);
     },
-    'AMAZON.HelpIntent': function () {
+    'HelpIntent': function () {
         const speechOutput = HELP_MESSAGE;
         const reprompt = HELP_REPROMPT;
 
         this.response.speak(speechOutput).listen(reprompt);
         this.emit(':responseReady');
     },
-    'AMAZON.CancelIntent': function () {
+    'CancelIntent': function () {
         this.response.speak(STOP_MESSAGE);
         this.emit(':responseReady');
     },
-    'AMAZON.StopIntent': function () {
+    'StopIntent': function () {
         this.response.speak(STOP_MESSAGE);
         this.emit(':responseReady');
     },
+    'Unhandled': function () {
+        this.response.speak(STOP_MESSAGE);
+        this.emit(':responseReady');
+    }
 };
 
 function getNextBus (bus, stop) {
