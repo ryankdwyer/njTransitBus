@@ -42,9 +42,7 @@ const handlers = {
 
         getNextBus(bus, stop)
         .then(parseResponse)
-        .then(function(data) {
-            
-        });
+        .then(createText);
     },
     'AMAZON.HelpIntent': function () {
         const speechOutput = HELP_MESSAGE;
@@ -75,6 +73,23 @@ function getNextBus (bus, stop) {
 }
 
 function parseResponse (data) {
-    return convert.xml2json(data);
+    return convert.xml2json(data, {compact: true});
 }
 
+function createText (buses) {
+	if (!buses.stop) {
+        //TODO put error message here
+        return false;
+    }
+    if (buses.noPredictionMessage) {
+        //TODO put error message here
+        return false;
+    }
+    if (!buses.stop.pre) {
+        // TODO put error message here
+        return false;
+    }
+
+    let text = '';
+    
+}

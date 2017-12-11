@@ -1,0 +1,77 @@
+<stop>
+    <pre>
+        <pt>1</pt>
+        <pu>MINUTE</pu>
+        <mode>1</mode>
+        <consist/>
+        <cars/>
+        <fd>129 SECAUCUS JUNCTION VIA SECAUCUS PLAZA</fd>
+        <scheduled>false</scheduled>
+        <nextbusminutes>0</nextbusminutes>
+        <nextbusonroutetime>6:48 PM</nextbusonroutetime>
+        <v>7437</v>
+        <rn>129</rn>
+        <rd>129</rd>
+        <zone/>
+    </pre>
+    <pre>
+        <pt>1</pt>
+        <pu>MINUTE</pu>
+        <mode>1</mode>
+        <consist/>
+        <cars/>
+        <fd>161 PATERSON</fd>
+        <scheduled>false</scheduled>
+        <nextbusminutes>0</nextbusminutes>
+        <nextbusonroutetime>6:43 PM</nextbusonroutetime>
+        <v>8294</v>
+        <rn>161</rn>
+        <rd>161</rd>
+        <zone/>
+    </pre>
+    <pre>
+        <pt>7</pt>
+        <pu>MINUTES</pu>
+        <mode>1</mode>
+        <consist/>
+        <cars/>
+        <fd>191 WILLOWBROOK</fd>
+        <scheduled>false</scheduled>
+        <nextbusminutes>0</nextbusminutes>
+        <nextbusonroutetime>6:58 PM</nextbusonroutetime>
+        <v>7154</v>
+        <rn>191</rn>
+        <rd>191</rd>
+        <zone/>
+    </pre>
+    <pre>
+        <pt>8</pt>
+        <pu>MINUTES</pu>
+        <mode>1</mode>
+        <consist/>
+        <cars/>
+        <fd>191 WILLOWBROOK</fd>
+        <scheduled>false</scheduled>
+        <nextbusminutes>0</nextbusminutes>
+        <nextbusonroutetime>6:50 PM</nextbusonroutetime>
+        <v>9027</v>
+        <rn>191</rn>
+        <rd>191</rd>
+        <zone/>
+    </pre>
+    <pre>
+        <pt>19</pt>
+        <pu>MINUTES</pu>
+        <mode>1</mode>
+        <consist/>
+        <cars/>
+        <fd>108 NEWARK</fd>
+        <scheduled>false</scheduled>
+        <nextbusminutes>0</nextbusminutes>
+        <nextbusonroutetime>7:13 PM</nextbusonroutetime>
+        <v>6349</v>
+        <rn>108</rn>
+        <rd>108</rd>
+        <zone/>
+    </pre>
+</stop>
