@@ -4,7 +4,7 @@
 'use strict';
 const Alexa = require('alexa-sdk');
 const request = require('request');
-const convert = require('xml-js'):
+const convert = require('xml-js');
 
 //Replace with your app ID (OPTIONAL).  You can find this value at the top of your skill's page on http://developer.amazon.com.
 //Make sure to enclose your value in quotes, like this: const APP_ID = 'amzn1.ask.skill.bb4045e6-b3e8-4133-b650-72923c5980f1';
@@ -101,7 +101,7 @@ function createText (buses) {
 
     let text = [];
     
-    buses.stop.pre.forEach((function(bus) {
+    buses.stop.pre.forEach(function(bus) {
         let routeNumber = bus.rn;
         routeNumber.toString().split('').join(' ');
 
