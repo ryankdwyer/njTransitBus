@@ -15,6 +15,7 @@ const HELP_MESSAGE = 'You can say when is the next 127 bus... What can I help yo
 const HELP_REPROMPT = 'What can I help you with?';
 const STOP_MESSAGE = 'Goodbye!';
 const PROBLEM_MESSAGE = 'There was an issue';
+const NO_BUSES = 'There are no buses scheduled';
 
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
@@ -24,6 +25,19 @@ exports.handler = function(event, context, callback) {
 };
 
 const url = 'http://mybusnow.njtransit.com/bustime/eta/getStopPredictionsETA.jsp';
+
+const numToWord = {
+    '1': 'one',
+    '2': 'two',
+    '3': 'three',
+    '4': 'four',
+    '5': 'five',
+    '6': 'six',
+    '7': 'seven',
+    '8': 'eight',
+    '9': 'nine',
+    '0': 'zero'
+};
 
 const handlers = {
     'LaunchRequest': function () {
@@ -40,9 +54,10 @@ const handlers = {
             return;
         }
 
-        getNextBus(bus, stop)
-        .then(parseResponse)
-        .then(createText);
+        return getNextBus(bus, stop)
+            .then(parseResponse)
+            .then(createText)
+            .then(speak);
     },
     'AMAZON.HelpIntent': function () {
         const speechOutput = HELP_MESSAGE;
@@ -77,19 +92,29 @@ function parseResponse (data) {
 }
 
 function createText (buses) {
-	if (!buses.stop) {
-        //TODO put error message here
-        return false;
-    }
     if (buses.noPredictionMessage) {
-        //TODO put error message here
-        return false;
+        return NO_BUSES;
     }
-    if (!buses.stop.pre) {
-        // TODO put error message here
-        return false;
+	if (!buses.stop || !buses.stop.pre) {
+        return NO_BUSES;
     }
 
-    let text = '';
+    let text = [];
     
+    buses.stop.pre.forEach((function(bus) {
+        let routeNumber = bus.rn;
+        routeNumber.toString().split('').join(' ');
+
+        let when = bus.pt + ' ' + bus.pu;
+        let plural = (parseInt(bus.pt) > 1) ? 's' : '';
+
+        text.push(`The next ${routeNumber} bus will arrive in ${when}${plural}`);
+    });
+
+    return text.join(' AND');
+}
+
+function speak (text) {
+    this.response.speak(text);
+    this.emit(':responseReady');
 }
