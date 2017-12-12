@@ -44,13 +44,14 @@ const handlers = {
         this.emit('GetNextBusIntent');
     },
     'GetNextBusIntent': function () {
+        console.log(this.event.request.intent.slots);
         let bus = this.event.request.intent.slots.bus.value;
         let stop = this.event.request.intent.slots.stop.value;
         let text = '';
 
-        if (!bus || !route) {
+        if (!bus || !stop) {
             text = 'You must supply both a bus and stop number';
-            this.response.speak(PROBLEM_MESSAGE);
+            this.response.speak(PROBLEM_MESSAGE + ' ' + text);
             this.emit(':responseReady');
             return;
         }
@@ -75,10 +76,6 @@ const handlers = {
         this.response.speak(STOP_MESSAGE);
         this.emit(':responseReady');
     },
-    'Unhandled': function () {
-        this.response.speak(STOP_MESSAGE);
-        this.emit(':responseReady');
-    }
 };
 
 function getNextBus (bus, stop) {

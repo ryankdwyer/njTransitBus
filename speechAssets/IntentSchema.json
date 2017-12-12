@@ -4,11 +4,11 @@
             "intent": "GetNextBusIntent",
             "slots": [
                 {
-                    "name": "bus",
+                    "name": "stop",
                     "type": "AMAZON.NUMBER"
                 },
                 {
-                    "name": "stop",
+                    "name": "bus",
                     "type": "AMAZON.NUMBER"
                 }
             ]
