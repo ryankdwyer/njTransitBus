@@ -3,7 +3,7 @@
 
 'use strict';
 const Alexa = require('alexa-sdk');
-const request = require('request');
+const request = require('request-promise');
 const convert = require('xml-js');
 
 //Replace with your app ID (OPTIONAL).  You can find this value at the top of your skill's page on http://developer.amazon.com.
@@ -44,22 +44,27 @@ const handlers = {
         this.emit('GetNextBusIntent');
     },
     'GetNextBusIntent': function () {
-        console.log(this.event.request.intent.slots);
+        console.info(this.event.request.intent.slots.bus);
+        console.info(this.event.request.intent.slots.stop);
         let bus = this.event.request.intent.slots.bus.value;
         let stop = this.event.request.intent.slots.stop.value;
         let text = '';
 
-        if (!bus || !stop) {
+        if (!stop) {
             text = 'You must supply both a bus and stop number';
             this.response.speak(PROBLEM_MESSAGE + ' ' + text);
             this.emit(':responseReady');
             return;
         }
 
+
         return getNextBus(bus, stop)
             .then(parseResponse)
             .then(createText)
-            .then(speak);
+            .then((text) => {
+                this.response.speak(text);
+                this.emit(':responseReady');
+            });
     },
     'HelpIntent': function () {
         const speechOutput = HELP_MESSAGE;
@@ -90,7 +95,7 @@ function getNextBus (bus, stop) {
 }
 
 function parseResponse (data) {
-    return convert.xml2json(data, {compact: true});
+    return convert.xml2js(data, {compact: true});
 }
 
 function createText (buses) {
@@ -102,21 +107,28 @@ function createText (buses) {
     }
 
     let text = [];
+    if ( Array.isArray(buses.stop.pre) ) {
+        buses.stop.pre.forEach(function(bus) {
+            var busText = _processBus(bus);
+            text.push(busText);
+        });
+    } else {
+        text.push(_processBus(buses.stop.pre));
+    }
     
-    buses.stop.pre.forEach(function(bus) {
-        let routeNumber = bus.rn;
-        routeNumber.toString().split('').join(' ');
-
-        let when = bus.pt + ' ' + bus.pu;
-        let plural = (parseInt(bus.pt) > 1) ? 's' : '';
-
-        text.push(`The next ${routeNumber} bus will arrive in ${when}${plural}`);
-    });
-
-    return text.join(' AND');
+    return text.join(' AND ');
 }
 
-function speak (text) {
-    this.response.speak(text);
-    this.emit(':responseReady');
+function _processBus (bus) {
+    let routeNumber = bus.rn._text;
+    routeNumber.toString().split('').join(' ');
+
+    let when;
+    if ( bus.pt._text ) {
+        when = ' will arrive in ' + bus.pt._text + ' ' + bus.pu._text;
+    } else {
+        when = ' is approaching. '; 
+    }
+
+    return `The next ${routeNumber} bus ${when}`;
 }
