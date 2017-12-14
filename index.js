@@ -26,19 +26,6 @@ exports.handler = function(event, context, callback) {
 
 const url = 'http://mybusnow.njtransit.com/bustime/eta/getStopPredictionsETA.jsp';
 
-const numToWord = {
-    '1': 'one',
-    '2': 'two',
-    '3': 'three',
-    '4': 'four',
-    '5': 'five',
-    '6': 'six',
-    '7': 'seven',
-    '8': 'eight',
-    '9': 'nine',
-    '0': 'zero'
-};
-
 const handlers = {
     'LaunchRequest': function () {
         this.emit('GetNextBusIntent');
@@ -51,7 +38,7 @@ const handlers = {
         let text = '';
 
         if (!stop) {
-            text = 'You must supply both a bus and stop number';
+            text = 'You must supply a stop number';
             this.response.speak(PROBLEM_MESSAGE + ' ' + text);
             this.emit(':responseReady');
             return;
@@ -124,6 +111,7 @@ function _processBus (bus) {
     routeNumber.toString().split('').join(' ');
 
     let when;
+    let now;
     if ( bus.pt._text ) {
         when = ' will arrive in ' + bus.pt._text + ' ' + bus.pu._text;
     } else {

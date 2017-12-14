@@ -5,6 +5,9 @@ GetNextBusIntent get next scheduled {bus} bus at stop {stop}
 GetNextBusIntent next arrival for {bus} bus at stop {stop}
 GetNextBusIntent get next scheduled {bus} bus at stop {stop}
 GetNextBusIntent bus {bus} at {stop}
+GetNextBusIntent stop {stop}
+GetNextBusIntent {stop}
+GetNextBusIntent {bus} at {stop}
 
 HelpIntent help
 HelpIntent help me

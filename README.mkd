@@ -1,1 +1,3 @@
 ## Alexa Skill to tell you the estimated bus time
+
+zip -r ../lambaFunc.zip *
