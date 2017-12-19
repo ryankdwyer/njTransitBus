@@ -5,7 +5,7 @@
 const Alexa = require('alexa-sdk');
 const request = require('request-promise');
 const convert = require('xml-js');
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 //Replace with your app ID (OPTIONAL).  You can find this value at the top of your skill's page on http://developer.amazon.com.
 //Make sure to enclose your value in quotes, like this: const APP_ID = 'amzn1.ask.skill.bb4045e6-b3e8-4133-b650-72923c5980f1';
@@ -89,6 +89,7 @@ function parseResponse (data) {
 }
 
 function createText (buses, bus) {
+    console.log(buses.stop.pre);
     if (buses.noPredictionMessage) {
         return NO_BUSES;
     }
@@ -99,11 +100,11 @@ function createText (buses, bus) {
     let text = [];
 
     if ( Array.isArray(buses.stop.pre) ) {
-        buses.stop.pre.forEach(function(bus) {
-            if (parseInt(bus.rn._text) !== bus) {
+        buses.stop.pre.forEach(function(busObj) {
+            if (bus && parseInt(bus.rn._text) !== bus) {
                 return;
             }
-            var busText = _processBus(bus);
+            var busText = _processBus(busObj);
             text.push(busText);
         });
     } else {
@@ -116,7 +117,7 @@ function createText (buses, bus) {
         return NO_BUSES;
     }
 
-    return text.join(' AND, ');
+    return text.join(', AND, ');
 }
 
 function _processBus (bus) {
@@ -124,7 +125,7 @@ function _processBus (bus) {
     routeNumber.toString().split('').join(' ');
 
     let when;
-    let now = moment();
+    let now = moment().tz('America/New_York');
 
     if ( bus.pt._text ) {
         now.add(parseInt(bus.pt._text), 'minutes');
