@@ -5,6 +5,7 @@
 const Alexa = require('alexa-sdk');
 const request = require('request-promise');
 const convert = require('xml-js');
+const moment = require('moment');
 
 //Replace with your app ID (OPTIONAL).  You can find this value at the top of your skill's page on http://developer.amazon.com.
 //Make sure to enclose your value in quotes, like this: const APP_ID = 'amzn1.ask.skill.bb4045e6-b3e8-4133-b650-72923c5980f1';
@@ -47,7 +48,9 @@ const handlers = {
 
         return getNextBus(bus, stop)
             .then(parseResponse)
-            .then(createText)
+            .then((parsedResponse) => {
+                return createText(parsedResponse, bus);
+            })
             .then((text) => {
                 this.response.speak(text);
                 this.emit(':responseReady');
@@ -85,7 +88,7 @@ function parseResponse (data) {
     return convert.xml2js(data, {compact: true});
 }
 
-function createText (buses) {
+function createText (buses, bus) {
     if (buses.noPredictionMessage) {
         return NO_BUSES;
     }
@@ -94,16 +97,26 @@ function createText (buses) {
     }
 
     let text = [];
+
     if ( Array.isArray(buses.stop.pre) ) {
         buses.stop.pre.forEach(function(bus) {
+            if (parseInt(bus.rn._text) !== bus) {
+                return;
+            }
             var busText = _processBus(bus);
             text.push(busText);
         });
     } else {
-        text.push(_processBus(buses.stop.pre));
+        if (buses.stop.pre.rn._text === bus) {
+            text.push(_processBus(buses.stop.pre));
+        }
     }
     
-    return text.join(' AND ');
+    if (!text.length) {
+        return NO_BUSES;
+    }
+
+    return text.join(' AND, ');
 }
 
 function _processBus (bus) {
@@ -111,9 +124,11 @@ function _processBus (bus) {
     routeNumber.toString().split('').join(' ');
 
     let when;
-    let now;
+    let now = moment();
+
     if ( bus.pt._text ) {
-        when = ' will arrive in ' + bus.pt._text + ' ' + bus.pu._text;
+        now.add(parseInt(bus.pt._text), 'minutes');
+        when = ' will arrive at ' + now.format('LT');
     } else {
         when = ' is approaching. '; 
     }
